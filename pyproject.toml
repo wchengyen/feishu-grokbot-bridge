@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "feishu-grokbot-bridge"
+version = "0.1.0"
+description = "Bridge Feishu long-connection events to a Grok Bot routine webhook."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Wchengyen" }]
+dependencies = [
+    "lark-oapi>=1.7.5,<2",
+    "httpx>=0.27",
+    "watchdog>=4",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "ruff>=0.6",
+]
+
+[project.scripts]
+feishu-grokbot-bridge = "bridge.main:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["bridge*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"
+filterwarnings = [
+    "ignore::DeprecationWarning:lark_oapi.*",
+    "ignore::DeprecationWarning:pkg_resources.*",
+]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["B011"]
+
+[tool.ruff.format]
+quote-style = "double"

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/wchengyen/feishu-grokbot-bridge/blob/main/docs/schemas/result.schema.json",
+  "title": "FeishuGrokBotResult",
+  "description": "One outbox file written by the Grok Bot routine. Filename is <task_id>.<seq>.json.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["version", "task_id", "kind", "text"],
+  "properties": {
+    "version": { "const": 1 },
+    "task_id": { "type": "string", "format": "uuid" },
+    "kind": { "enum": ["progress", "final", "error"] },
+    "text": { "type": "string", "description": "Markdown shown to the Feishu user." },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["path"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Absolute path to a file the bridge process can read."
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/wchengyen/feishu-grokbot-bridge/blob/main/docs/schemas/task.schema.json",
+  "title": "FeishuGrokBotTask",
+  "description": "JSON body posted to the Grok Bot routine webhook.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "task_id",
+    "source",
+    "chat_id",
+    "chat_type",
+    "message_id",
+    "root_id",
+    "sender",
+    "text",
+    "history",
+    "reply_via",
+    "created_at"
+  ],
+  "properties": {
+    "version": { "const": 1 },
+    "task_id": { "type": "string", "format": "uuid" },
+    "source": { "const": "feishu" },
+    "chat_id": { "type": "string", "minLength": 1 },
+    "chat_type": { "enum": ["p2p", "group"] },
+    "message_id": { "type": "string", "minLength": 1 },
+    "root_id": { "type": "string" },
+    "sender": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["open_id", "name"],
+      "properties": {
+        "open_id": { "type": "string" },
+        "name": {
+          "type": "string",
+          "description": "Often empty. im.message.receive_v1 does not include the sender display name."
+        }
+      }
+    },
+    "text": { "type": "string" },
+    "history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["role", "text", "ts"],
+        "properties": {
+          "role": { "enum": ["user", "assistant"] },
+          "text": { "type": "string" },
+          "ts": { "type": "string", "description": "ISO-8601 timestamp." }
+        }
+      }
+    },
+    "reply_via": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "dir"],
+      "properties": {
+        "type": { "const": "outbox" },
+        "dir": { "type": "string", "description": "Absolute outbox directory on the shared machine." }
+      }
+    },
+    "created_at": { "type": "string", "description": "ISO-8601 timestamp." }
+  }
+}
